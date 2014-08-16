@@ -1,3 +1,5 @@
+var config = require('../config');
+
 var redisClient = null;
 var redisStore = null;
 
@@ -7,7 +9,7 @@ var self = module.exports = {
         redisStore = store;
     },
     getSessionId: function (handshake) {
-        return handshake.signedCookies["connect.sid"];
+        return handshake.signedCookies[config.sessionCookieKey];
     },
     get: function (handshake, callback) {
         var sessionId = self.getSessionId(handshake);

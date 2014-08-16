@@ -1,5 +1,6 @@
 <div ng-controller="MainCtrl">
     <h2>Sessions, Express, SocketIO, Redis</h2>
+    <div>"Register" works thorugh a standard REST route, and "Rename" through SocketIO which confirms session sharing between the two works properly.</div><br />
     <div>
         <input ng-model="userName" />
         <button ng-click="register()" ng-disabled="currentUser.userName">Register</button>

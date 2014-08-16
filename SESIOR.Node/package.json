@@ -10,7 +10,6 @@
     "session": "0.1.0",
     "socket.io": "0.9.16",
     "redis": "0.10.2",
-    "connect-redis": "1.4.7",
-    "q": "1.0.1"
+    "connect-redis": "1.4.7"
   }
 }

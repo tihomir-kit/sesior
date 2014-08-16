@@ -6,6 +6,6 @@ module.exports = function (app) {
     app.get("/", routes.index);
 
     // MEMBERSHIP
-    app.post("/register", membershipRoute.register);
     app.get("/verify-session", membershipRoute.verifySession);
+    app.post("/register", membershipRoute.register);
 }

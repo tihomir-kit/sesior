@@ -58,7 +58,7 @@ angular.module("SESIOR.SPA.services")
                         initializeCurrentUser(data.user);
                     }
                     else {
-                        console.log(error);
+                        console.log("An error occured while trying to register " + userName);
                     }
                 })
                 .error(function () {

@@ -5,8 +5,10 @@ var membershipRoute = require('../routes/membership');
 module.exports = function (socket) {
     socket.on("user:connected", function (userName, callback) {
         socketService.set(userName, socket);
+
         var user = membershipRoute.getUser(userName);
         socket.broadcast.emit("user:joined", user);
+
         var users = membershipRoute.getAllUsers();
         callback(null, users);
     });

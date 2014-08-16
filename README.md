@@ -16,7 +16,7 @@ SESIOR is an AngularJS/NodeJS demo app which examplifies how sessions can be sha
  * Run RunNode.sh to start the SESIOR.Node portion of the application (uses [Nodemon](https://github.com/remy/nodemon))
  * Run RunSPA.sh to start the SESIOR.SPA portion of the application  
  * If you're running Windows, you can add SESIOR.SPA/app to IIS and run it that way
-   * make sure to add your SESIOR.SPA hostname to SESIOR.Node/config.js allowed CORS origins
+   * make sure to set your SESIOR.SPA hostname in SESIOR.Node/config.js as allowed CORS origins
  * If you're running *NIX, read [this](http://stackoverflow.com/questions/17451834/angularjs-node-js-expressjs-application-integration-issue)
 
 ### Deleting node_modules directory on Windows

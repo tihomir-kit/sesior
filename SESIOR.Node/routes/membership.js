@@ -12,7 +12,7 @@ var self = module.exports = {
         }
         else {
             if (users[userName])
-                req.session.UserName = "";
+                req.session.userName = "";
             res.send({ sessionVerified: false });
         }
     },
