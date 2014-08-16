@@ -6,7 +6,6 @@ SESIOR is an AngularJS/NodeJS demo app which examplifies how sessions can be sha
 ## Installation
  * Install [Git Bash](http://msysgit.github.io/) (Windows users only)
  * Install [NodeJS](http://nodejs.org/)
- * Install [Python 2.7.*](https://www.python.org/downloads/) 
  * Run InstallNpmDependencies.sh located in the root directory of the project
    * this will install all the needed npm and bower dependencies for both SESIOR.Node and SESIOR.SPA
  * Install [Redis](http://redis.io/) ([for Windows users](https://github.com/MSOpenTech/redis/tree/2.8/bin/release))

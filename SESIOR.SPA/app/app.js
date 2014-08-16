@@ -21,4 +21,7 @@ angular.module("SESIOR.SPA").config(function ($routeProvider) {
         .otherwise({
             redirectTo: "/"
         });
+})
+.controller("AppCtrl", function (UserService) {
+    UserService.verifySession();
 });

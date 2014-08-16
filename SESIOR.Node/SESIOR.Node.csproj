@@ -47,6 +47,7 @@
   <ItemGroup>
     <Content Include="app.js" />
     <Content Include="routes\index.js" />
+    <Content Include="routes\membership.js" />
     <Content Include="routes\users-socket.js" />
     <Content Include="config.js" />
     <Content Include="shared\router.js" />

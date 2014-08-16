@@ -1,7 +1,7 @@
 var redisClient = null;
 var redisStore = null;
 
-module.exports = {
+var self = module.exports = {
     initializeRedis: function (client, store) {
         redisClient = client;
         redisStore = store;
@@ -10,9 +10,9 @@ module.exports = {
         return handshake.signedCookies["connect.sid"];
     },
     get: function (handshake, callback) {
-        var sessionId = this.getSessionId(handshake);
+        var sessionId = self.getSessionId(handshake);
 
-        this.getSessionBySessionID(sessionId, function (err, session) {
+        self.getSessionBySessionID(sessionId, function (err, session) {
             if (err) callback(err);
             if (callback != undefined)
                 callback(null, session);
@@ -26,10 +26,10 @@ module.exports = {
         });
     },
     getUserName: function (handshake, callback) {
-        this.get(handshake, function (err, session) {
+        self.get(handshake, function (err, session) {
             if (err) callback(err);
             if (session)
-                callback(session.userName);
+                callback(null, session.userName);
             else
                 callback(null);
         });
@@ -47,6 +47,6 @@ module.exports = {
     },
     setSessionProperty: function (session, propertyName, propertyValue, callback) {
         session[propertyName] = propertyValue;
-        this.updateSession(session, callback);
+        self.updateSession(session, callback);
     }
 };

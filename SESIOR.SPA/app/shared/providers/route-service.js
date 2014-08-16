@@ -11,6 +11,6 @@ angular.module("SESIOR.SPA.services")
         this.node = {
             base: CONFIG.NODE_URL,
             verifySession: nodeUrl("verify-session"),
-            login: nodeUrl("login")
+            register: nodeUrl("register")
         };
     });

@@ -7,7 +7,7 @@ module.exports = {
     set: function (userName, socket) {
         sockets[userName] = socket;
     },
-    getAll: function () {
-        return sockets;
+    remove: function (userName) {
+        delete sockets[userName];
     }
 };

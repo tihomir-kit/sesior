@@ -2,46 +2,35 @@
 
 angular.module("SESIOR.SPA.services")
     .service("UserService", function ($http, SocketIoFactory, RouteService) {
-        // TODO: make "withCredentials" generic for all calls
         var self = this;
 
-        this.userCredentials = {
-            userName: "",
-            password: ""
-        };
-
-        this.currentUser = {
-            userName: "",
-            isAvailableForDuel: false
-        };
-
         this.users = {};
-        this.userCount = { value: 0 };
-
-        function initializeCurrentUser(user) {
-            self.currentUser.userName = user.id;
-            self.currentUser.isAvailableForDuel = user.isAvailableForDuel;
-            self.addUser(user);
-        }
+        this.currentUser = {
+            userName: ""
+        };
 
         function initializeSocketIo(user) {
             SocketIoFactory.connect();
-            //registerSocketOnError();
-            //registerSocketInitUsers();
-            //registerSocketUserJoined();
-            //registerSocketUserLeft();
-            //socketEmitAuthorizedUser(user.id);
+            registerSocketInitUsers();
+            registerSocketUserJoined();
+            registerSocketUserRenamed();
+            registerSocketUserLeft();
+            socketEmitUserConnected(user.userName);
+        }
+
+        function initializeCurrentUser(user) {
+            self.currentUser.userName = user.userName;
+            self.addUser(user);
         }
 
         this.initializeUsers = function (users) {
-            angular.forEach(users, function (user, index) {
+            angular.forEach(users, function (user) {
                 self.addUser(user);
             });
         };
 
         this.addUser = function (user) {
             self.users[user.userName] = user;
-            self.userCount.value++;
         };
 
         this.removeUser = function (userName) {
@@ -52,103 +41,68 @@ angular.module("SESIOR.SPA.services")
             $http.get(RouteService.node.verifySession, { withCredentials: true })
                 .success(function (data) {
                     if (data.sessionVerified) {
-                        initializeCurrentUser(data.user);
                         initializeSocketIo(data.user);
+                        initializeCurrentUser(data.user);
                     }
-                });
-
-                // TODO: handle onError on all http calls
-        };
-
-        this.loginUser = function (callback) {
-            resolveMembership(RouteService.node.login, callback);
-        };
-
-        this.registerUser = function (callback) {
-            resolveMembership(RouteService.node.register, callback);
-        };
-
-        this.logoutUser = function (callback) {
-            $http.post(RouteService.node.logout, { userName: self.currentUser.userName }, { withCredentials: true })
-                .success(function (loggedOut) {
-                    console.log(loggedOut);
-                    if (loggedOut) {
-                        resetCurrentUser();
-                    }
-                    else {
-                        ErrorService.addError("Could not log out, please try again");
-                    }
-                    callback(loggedOut);
                 })
-                .error(function (error) {
-                    console.log(error);
-                });;
+                .error(function () {
+                    console.log("An error occured while trying verify session");
+                });
         };
 
-        function resolveMembership(route, callback) {
-            ErrorService.clearErrors();
-
-            $http.post(route, { credentials: self.userCredentials }, { withCredentials: true })
+        this.registerUser = function (userName) {
+            $http.post(RouteService.node.register, { userName: userName }, { withCredentials: true })
                 .success(function (data) {
                     if (data.membershipResolved) {
-                        initializeCurrentUser(data.user);
                         initializeSocketIo(data.user);
-                        resetUserCredentials();
+                        initializeCurrentUser(data.user);
                     }
                     else {
-                        ErrorService.addError(data.error);
+                        console.log(error);
                     }
-
-                    callback(data.membershipResolved);
-                });
-        }
-
-        function resetUserCredentials() {
-            self.userCredentials = {
-                userName: "",
-                password: ""
-            }
-        }
-
-        function resetCurrentUser() {
-            self.currentUser.userName = "";
-            self.currentUser.isAvailableForDuel = false;
-        }
-
-        function socketEmitAuthorizedUser(userName) {
-            SocketIoFactory.emit("user:authorized", userName, function (error) {
-                if (error)
-                    ErrorService.addError(error);
-            });
-        }
-
-        this.toggleAvailability = function () {
-            $http.get(RouteService.node.toggleAvailability, { withCredentials: true })
-                .success(function (data) {
-                    if (data.error)
-                        ErrorService.addError(data.error);
-                    else
-                        self.currentUser.isAvailableForDuel = data.isAvailableForDuel;
+                })
+                .error(function () {
+                    console.log("An error occured while trying to register " + userName);
                 });
         };
 
-
-        // Socket.IO callback registrations
-        function registerSocketOnError() {
-            SocketIoFactory.on('error', function (error) {
-                ErrorService.addError(error);
+        function socketEmitUserConnected(userName) {
+            SocketIoFactory.emit("user:connected", userName, function (error, users) {
+                if (!error)
+                    self.initializeUsers(users);
+                else
+                    console.log(error);
             });
         }
 
+        this.socketEmitRenameUser = function (userName) {
+            SocketIoFactory.emit("user:rename", userName, function (error, data) {
+                if (!error) {
+                    initializeCurrentUser(data.user);
+                    self.removeUser(data.oldUserName);
+                }
+                else
+                    console.log(error);
+            });
+        };
+
+        // Socket.IO callback registrations
         function registerSocketInitUsers() {
-            SocketIoFactory.on("users:init", function (data) {
-                self.initializeUsers(data.users);
+            SocketIoFactory.on("users:init", function (users) {
+                self.initializeUsers(users);
             });
         }
 
         function registerSocketUserJoined() {
             SocketIoFactory.on("user:joined", function (user) {
                 self.addUser(user);
+            });
+        };
+
+        function registerSocketUserRenamed() {
+            SocketIoFactory.on("user:renamed", function (data) {
+                self.removeUser(data.oldUserName);
+                self.addUser(data.user);
             });
         };
 

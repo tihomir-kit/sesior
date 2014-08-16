@@ -3,7 +3,6 @@
 angular.module("SESIOR.SPA.services")
     .factory("SocketIoFactory", function ($rootScope, RouteService) {
         var socket = null;
-        var listeners = [];
 
         function listenerExists(eventName) {
             return socket.hasOwnProperty("$events") && socket.$events.hasOwnProperty(eventName);
@@ -36,7 +35,5 @@ angular.module("SESIOR.SPA.services")
                     });
                 })
             }
-            // TODO: handle destroy
-            // http://stackoverflow.com/questions/14389049/improve-this-angularjs-factory-to-use-with-socket-io
         };
     });
