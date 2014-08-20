@@ -1,7 +1,7 @@
 Sessions, Express, SocketIO, Redis
 ======================
 
-SESIOR is an AngularJS/NodeJS demo app which examplifies how sessions can be shared between NodeJS Express framework and Socket.IO using Redis for session storage.
+SESIOR is an AngularJS/NodeJS demo app which examplifies how sessions can be shared between NodeJS Express (v3.5.x) framework and Socket.IO (v0.9.x) using Redis for session storage.
 
 ## Installation
  * Install [Git Bash](http://msysgit.github.io/) (Windows users only)
