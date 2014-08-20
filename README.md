@@ -1,7 +1,7 @@
 Sessions, Express, SocketIO, Redis
 ======================
 
-SESIOR is an AngularJS/NodeJS demo app which examplifies how sessions can be shared between NodeJS Express framework and Socket.IO using Redis for session storage.
+SESIOR is an AngularJS/NodeJS demo app which examplifies how sessions can be shared between NodeJS Express (v4.8.x) framework and Socket.IO (v1.0.x) using Redis for session storage.
 
 ## Installation
  * Install [Git Bash](http://msysgit.github.io/) (Windows users only)
@@ -18,6 +18,13 @@ SESIOR is an AngularJS/NodeJS demo app which examplifies how sessions can be sha
  * If you're running Windows, you can add SESIOR.SPA/app to IIS and run it that way
    * make sure to set your SESIOR.SPA hostname in SESIOR.Node/config.js as allowed CORS origins
  * If you're running *NIX, read [this](http://stackoverflow.com/questions/17451834/angularjs-node-js-expressjs-application-integration-issue)
+ 
+## Older Express/SocketIO version branches
+ * [Express v3.5.x, SocketIO v0.9.x](https://github.com/pootzko/sesior/tree/exp3.5.x_sio0.9.x)
 
 ### Deleting node_modules directory on Windows
 Not all files from node_modules in SESIOR.SPA can be deleted normally because their filenames are too long, so use ClearSpaNodeModules.bat from the project root directory to do that
+
+======================
+
+Made at: [Mono Software Ltd.](http://www.mono-software.com/)

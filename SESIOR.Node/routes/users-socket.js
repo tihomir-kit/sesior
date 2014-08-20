@@ -14,14 +14,14 @@ module.exports = function (socket) {
     });
 
     socket.on("user:rename", function (userName, callback) {
-        sessionService.getUserName(socket.handshake, function (err, oldUserName) {
-            sessionService.setSessionProperty(socket.handshake.session, "userName", userName, function (err, data) {
+        sessionService.getUserName(socket.request, function (err, oldUserName) {
+            sessionService.setSessionProperty(socket.request.session, "userName", userName, function (err, data) {
                 if (err) {
                     callback(err);
                     return;
                 }
 
-                sessionService.getUserName(socket.handshake, function (err, newUserName) {
+                sessionService.getUserName(socket.request, function (err, newUserName) {
                     if (err) {
                         callback(err);
                         return;
@@ -39,7 +39,7 @@ module.exports = function (socket) {
     });
 
     socket.on("disconnect", function () {
-        sessionService.getUserName(socket.handshake, function (err, currentUserName) {
+        sessionService.getUserName(socket.request, function (err, currentUserName) {
             if (!err) {
                 socket.broadcast.emit("user:left", currentUserName);
                 membershipRoute.unregister(currentUserName);

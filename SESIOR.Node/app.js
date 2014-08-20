@@ -1,5 +1,9 @@
 // Module dependencies
 var express = require('express');
+var session = require('express-session');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var errorHandler = require('errorhandler');
 
 var http = require('http');
 var path = require('path');
@@ -9,11 +13,9 @@ var app = express();
 var server = http.createServer(app);
 var ioServer = io.listen(server);
 
-// Upon upgrading express to 4.x, connect-redis session handling will need to 
-// get some refactoring (session => express-session etc.)
 var redis = require('redis');
 var redisClient = redis.createClient();
-var RedisStore = require('connect-redis')(express);
+var RedisStore = require('connect-redis')(session);
 var redisStore = new RedisStore({ client: redisClient });
 
 // Other
@@ -35,34 +37,30 @@ var allowCrossDomain = function (req, res, next) {
 
 // All environments
 app.set('port', process.env.PORT || config.serverPort);
-app.use(express.logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(express.methodOverride());
-app.use(express.cookieParser(config.sessionSecret));
-app.use(express.session({ store: redisStore, key: config.sessionCookieKey, secret: config.sessionSecret }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser(config.sessionSecret));
+app.use(session({ store: redisStore, key: config.sessionCookieKey, secret: config.sessionSecret, resave: true, saveUninitialized: true }));
 app.use(allowCrossDomain);
-app.use(app.router);
 
 // Development only
-if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
+if (process.env.NODE_ENV === 'development') {
+    app.use(errorhandler())
 }
 
-ioServer.configure(function () {
-    var parseCookie = express.cookieParser(config.sessionSecret);
+ioServer.use(function (socket, next) {
+    var parseCookie = cookieParser(config.sessionSecret);
+    var handshake = socket.request;
 
-    ioServer.set('authorization', function (handshake, callback) {
-        parseCookie(handshake, null, function (err, data) {
-            sessionService.get(handshake, function (err, session) {
-                if (err)
-                    return callback(err.message, false);
-                if (!session)
-                    return callback("Not authorized", false);
+    parseCookie(handshake, null, function (err, data) {
+        sessionService.get(handshake, function (err, session) {
+            if (err)
+                next(new Error(err.message));
+            if (!session)
+                next(new Error("Not authorized"));
 
-                handshake.session = session;
-                callback(null, true);
-            });
+            handshake.session = session;
+            next();
         });
     });
 });
