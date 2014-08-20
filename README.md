@@ -21,3 +21,7 @@ SESIOR is an AngularJS/NodeJS demo app which examplifies how sessions can be sha
 
 ### Deleting node_modules directory on Windows
 Not all files from node_modules in SESIOR.SPA can be deleted normally because their filenames are too long, so use ClearSpaNodeModules.bat from the project root directory to do that
+
+======================
+
+Made at: [Mono Software Ltd.](http://www.mono-software.com/)

@@ -4,7 +4,7 @@ npm install -g yo
 
 # Install NodeJS dependencies
 cd SESIOR.Node
-npm install -g express nodemon socket.io session express-session redis connect-redis q
+npm install -g nodemon express express-session socket.io redis connect-redis
 npm install
 
 
